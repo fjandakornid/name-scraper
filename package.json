@@ -17,7 +17,6 @@
   "devDependencies": {
     "@types/bent": "^7.0.2",
     "@types/cheerio": "^0.22.17",
-    "@types/request-promise": "^4.1.46",
     "tslint": "^6.1.1"
   }
 }
