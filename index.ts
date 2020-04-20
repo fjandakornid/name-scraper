@@ -7,7 +7,7 @@ const urlBoys = 'https://vefur.island.is/mannanofn/leit-ad-nafni/?Stafrof=&Nafn=
 interface NameItem {
   name: string,
   gender: number,
-  approved: string
+  approvalDate: string
 }
 
 async function main() {
@@ -28,8 +28,8 @@ async function getNames(url: string, gender: number): Promise<NameItem[]> {
     const line = $(li).text().trim()
     const items = line.split(' ')
     const name = items[0]
-    const approved = items.length > 1 ? items[items.length - 1] : null
-    return { name, gender, approved } as NameItem
+    const approvalDate = items.length > 1 ? items[items.length - 1] : null
+    return { name, gender, approvalDate } as NameItem
   })
 }
 
