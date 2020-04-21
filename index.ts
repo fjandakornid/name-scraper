@@ -3,23 +3,26 @@ import cheerio from 'cheerio'
 
 const urlGirls = 'https://vefur.island.is/mannanofn/leit-ad-nafni/?Stafrof=&Nafn=&Stulkur=on&Samthykkt=yes'
 const urlBoys = 'https://vefur.island.is/mannanofn/leit-ad-nafni/?Stafrof=&Nafn=&Drengir=on&Samthykkt=yes'
+const urlMiddleNames = 'https://vefur.island.is/mannanofn/leit-ad-nafni/?Stafrof=&Nafn=&Millinofn=on&Samthykkt=yes'
 
 interface NameItem {
   name: string,
-  gender: number,
-  approvalDate: string
+  gender: number | null,
+  approvalDate: string,
+  isMiddleName: boolean
 }
 
 async function main() {
-  const [boys, girls] = await Promise.all([
-    getNames(urlBoys, 0),
-    getNames(urlGirls, 1)
+  const [boys, girls, middle] = await Promise.all([
+    getNames(urlBoys, 0, false),
+    getNames(urlGirls, 1, false),
+    getNames(urlMiddleNames, null, true)
   ])
-  const names = [...boys, ...girls]
+  const names = [...boys, ...girls, ...middle]
   console.log(names)
 }
 
-async function getNames(url: string, gender: number): Promise<NameItem[]> {
+async function getNames(url: string, gender: number | null, isMiddleName: boolean): Promise<NameItem[]> {
   const request = bent('string')
   const content = await request(url)
   const $ = cheerio.load(content)
@@ -29,7 +32,7 @@ async function getNames(url: string, gender: number): Promise<NameItem[]> {
     const items = line.split(' ')
     const name = items[0]
     const approvalDate = items.length > 1 ? items[items.length - 1] : null
-    return { name, gender, approvalDate } as NameItem
+    return { name, gender, approvalDate, isMiddleName } as NameItem
   })
 }
 
